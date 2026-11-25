@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QR Maker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap">
+<style>
+*{box-sizing:border-box}
+:root{--bg:#fdf5fb;--bg2:#e8f3ff;--card:#ffffff;--ink:#3d3556;--mute:#74698f;--line:#eee3f6;--field:#fbf7ff;--grad:linear-gradient(135deg,#cdbcff,#ffc3e3);--gradtxt:#3d3556;--alt:#efeaff;--altHover:#e4dcff;--shadow:0 2px 4px rgba(120,90,170,.06),0 10px 28px rgba(150,110,200,.12);--glow:rgba(185,150,255,.45);--warn:#c4513a;--ok:#15803d;--warnbg:linear-gradient(135deg,#ffc9b8,#ffdcc2);--warnfg:#6b2a1c;--tagreq:#fff1b8;--tagreqfg:#7a5a06;--tagapp:#d6ebff;--tagappfg:#1f5a9a;--tagout:#ffd9cc;--tagoutfg:#a23d25;--tagidle:#d9f7e8;--tagidlefg:#1f6b4a;--lv0:#3d3556;--lv1:#15803d;--lv2:#4d7c0f;--lv3:#a16207;--lv4:#c2410c;--lv5:#7f1d1d;--lvfg:#fff;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1c1830;--bg2:#1a2438;--card:#272342;--ink:#f3eeff;--mute:#bdb4da;--line:#3a3560;--field:#2e2950;--grad:linear-gradient(135deg,#7d6bd8,#c46aa8);--gradtxt:#fff;--alt:#342f58;--altHover:#403a6b;--shadow:0 2px 4px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.3);--glow:rgba(160,130,240,.4);--warn:#ff8f78;--warnbg:linear-gradient(135deg,#c45a45,#d9785a);--warnfg:#fff;--tagreq:#4a3d12;--tagreqfg:#f6d77a;--tagapp:#1f3558;--tagappfg:#9cc4f7;--tagout:#4f281d;--tagoutfg:#f5a791;--tagidle:#17382f;--tagidlefg:#8be0b6;--lv0:#f3eeff;--lv1:#4ade80;--lv2:#a3e635;--lv3:#facc15;--lv4:#fb923c;--lv5:#f87171;--lvfg:#0b1411;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1c1830;--bg2:#1a2438;--card:#272342;--ink:#f3eeff;--mute:#bdb4da;--line:#3a3560;--field:#2e2950;--grad:linear-gradient(135deg,#7d6bd8,#c46aa8);--gradtxt:#fff;--alt:#342f58;--altHover:#403a6b;--shadow:0 2px 4px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.3);--glow:rgba(160,130,240,.4);--warn:#ff8f78;--warnbg:linear-gradient(135deg,#c45a45,#d9785a);--warnfg:#fff;--tagreq:#4a3d12;--tagreqfg:#f6d77a;--tagapp:#1f3558;--tagappfg:#9cc4f7;--tagout:#4f281d;--tagoutfg:#f5a791;--tagidle:#17382f;--tagidlefg:#8be0b6;--lv0:#f3eeff;--lv1:#4ade80;--lv2:#a3e635;--lv3:#facc15;--lv4:#fb923c;--lv5:#f87171;--lvfg:#0b1411;color-scheme:dark}
+html{background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:16px/1.5 Nunito,ui-rounded,"Segoe UI",system-ui,sans-serif;font-weight:600;color:var(--ink);min-height:100vh;background:radial-gradient(900px 520px at 5% -5%,color-mix(in srgb,#ffc3e3 35%,transparent),transparent 60%),radial-gradient(800px 520px at 100% 0%,var(--bg2),transparent 60%),var(--bg);background-attachment:fixed}
+main{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:18px}
+h1{margin:0;font-size:27px;font-weight:800;letter-spacing:-.01em}
+.bubbles{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.bubbles i{position:absolute;bottom:-80px;border-radius:50%;opacity:.55;animation:drift linear infinite}
+.bubbles i:nth-child(1){left:6%;width:34px;height:34px;background:#ffc3e3;animation-duration:16s}
+.bubbles i:nth-child(2){left:18%;width:20px;height:20px;background:#cdbcff;animation-duration:12s;animation-delay:-4s}
+.bubbles i:nth-child(3){left:32%;width:46px;height:46px;background:#bfe9d8;animation-duration:20s;animation-delay:-9s}
+.bubbles i:nth-child(4){left:47%;width:26px;height:26px;background:#ffe2a8;animation-duration:14s;animation-delay:-2s}
+.bubbles i:nth-child(5){left:61%;width:38px;height:38px;background:#bcdcff;animation-duration:18s;animation-delay:-11s}
+.bubbles i:nth-child(6){left:74%;width:22px;height:22px;background:#ffc3e3;animation-duration:13s;animation-delay:-6s}
+.bubbles i:nth-child(7){left:85%;width:42px;height:42px;background:#cdbcff;animation-duration:19s;animation-delay:-1s}
+.bubbles i:nth-child(8){left:94%;width:24px;height:24px;background:#bfe9d8;animation-duration:15s;animation-delay:-8s}
+@keyframes drift{0%{transform:translate(0,0) scale(.8)}50%{transform:translate(22px,-55vh) scale(1.05)}100%{transform:translate(-14px,-115vh) scale(.9);opacity:0}}
+
+.panel{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:18px;margin-bottom:16px;box-shadow:var(--shadow);animation:pop-in .6s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes pop-in{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:none}}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.logo{position:relative;width:54px;height:54px;border-radius:18px;background:var(--grad);display:grid;place-items:center;box-shadow:0 5px 0 rgba(150,110,200,.28),0 8px 18px var(--glow);animation:bounce 2.2s ease-in-out infinite;transform-origin:50% 100%;cursor:pointer}
+.logo:hover{animation:wiggle .6s}
+.logo svg{width:30px;height:30px;stroke:var(--gradtxt)}
+.logo::after{content:"✨";position:absolute;top:-10px;right:-12px;font-size:17px;animation:twinkle 1.8s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0) scale(1,1)}10%{transform:scale(1.08,.9)}30%{transform:translateY(-9px) scale(.95,1.07)}50%{transform:translateY(0) scale(1.06,.94)}60%{transform:scale(1,1)}}
+@keyframes wiggle{0%,100%{transform:rotate(0)}20%{transform:rotate(-14deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(5deg)}}
+@keyframes twinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.4}50%{transform:scale(1.15) rotate(20deg);opacity:1}}
+.sub{color:var(--mute);margin:0 0 14px;font-size:14px}
+textarea{width:100%;height:150px;font:inherit;font-weight:700;padding:12px 15px;border-radius:16px;border:2px solid var(--line);background:var(--field);color:var(--ink);resize:vertical;transition:border-color .2s,box-shadow .25s,transform .25s cubic-bezier(.34,1.56,.64,1)}
+textarea:hover{border-color:#d3c2f3}
+textarea:focus{outline:none;border-color:#b79cf5;box-shadow:0 0 0 5px var(--glow);transform:scale(1.01)}
+textarea::placeholder{color:var(--mute);opacity:.75;font-weight:600}
+button{font:inherit;font-weight:800;padding:10px 15px;border-radius:16px;position:relative;display:inline-block;background:var(--grad);color:var(--gradtxt);border:0;cursor:pointer;margin:10px 8px 4px 0;box-shadow:0 4px 0 rgba(150,110,200,.28),0 6px 14px var(--glow);transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .2s,filter .2s,background .2s;-webkit-tap-highlight-color:transparent;user-select:none}
+button:hover{transform:translateY(-3px) rotate(-1deg);box-shadow:0 7px 0 rgba(150,110,200,.25),0 12px 20px var(--glow);filter:brightness(1.04)}
+button:nth-child(even):hover{transform:translateY(-3px) rotate(1deg)}
+button:active{transform:translateY(3px) scale(.94,.9);box-shadow:0 1px 0 rgba(150,110,200,.3),0 2px 6px var(--glow);transition-duration:.08s}
+button.alt{background:var(--alt);color:var(--ink);box-shadow:0 4px 0 rgba(150,110,200,.16)}
+button.alt:hover{background:var(--altHover);box-shadow:0 7px 0 rgba(150,110,200,.16),0 10px 16px rgba(150,110,200,.15)}
+button:focus-visible,textarea:focus-visible{outline:3px solid #8f6ee8;outline-offset:3px}
+#msg{font-weight:700;color:var(--mute)}
+#out{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;margin-top:4px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:24px;padding:14px;text-align:center;break-inside:avoid;box-shadow:var(--shadow);animation:pop-in .6s cubic-bezier(.34,1.56,.64,1) both;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(120,90,170,.08),0 16px 34px rgba(150,110,200,.18)}
+.card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.12s}.card:nth-child(4){animation-delay:.18s}.card:nth-child(n+5){animation-delay:.24s}
+.card canvas{width:100%;height:auto;display:block;border-radius:14px}
+.card button{margin:12px 0 2px}
+.pop{position:fixed;z-index:60;pointer-events:none;font-size:15px;line-height:1;transform:translate(-50%,-50%);animation:burst .75s ease-out forwards}
+@keyframes burst{to{transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.3) rotate(140deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@media print{.no-print,.bubbles{display:none}html,body{background:#fff}main{padding:0}#out{grid-template-columns:repeat(3,1fr);gap:8px}.card{border:0;padding:0;background:#fff;box-shadow:none;animation:none}.card canvas{border-radius:0}.card button{display:none}}
+</style>
+</head>
+<body>
+<div class="bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<main>
+  <div class="no-print panel">
+    <div class="brand"><span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M20 20h1v1"/></svg></span><h1>QR Maker</h1></div>
+    <p class="sub">One student per line: <b>Name, Grade, Strand</b>, and optionally <b>Section</b> (commas, or copy the columns straight from Google Sheets). Each saved or printed card shows the QR with the student’s name, grade and strand under it. The QR itself only holds name, grade and strand.</p>
+    <textarea id="list" placeholder="Juan Dela Cruz, 11, STEM, Section A&#10;Maria Santos, 12, ABM"></textarea>
+    <button id="go">Make QR codes</button>
+    <button class="alt" id="print">Print</button>
+    <button class="alt" id="all">Download all (ZIP)</button>
+    <span id="msg" role="status"></span>
+  </div>
+  <div id="out"></div>
+</main>
+<script>
+function loadLib(files, test){
+  return new Promise(res => { let i = 0;
+    (function next(){
+      if (window[test] || i >= files.length) { res(!!window[test]); return; }
+      const s = document.createElement('script'); s.src = files[i++]; s.onload = next; s.onerror = next; document.head.appendChild(s);
+    })();
+  });
+}
+window.libsReady = loadLib(['https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js','https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'], 'qrcode');
+const loadZip = () => loadLib(['https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js','https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js'], 'JSZip');
+</script>
+<script>
+const $ = s => document.querySelector(s);
+const msg = t => $('#msg').textContent = t;
+let made = [];   // {name, canvas}
+
+function draw(name, grade, strand, section){
+  const q = qrcode(0, 'M'); q.addData([name, grade, strand].join('|')); q.make();
+  const n = q.getModuleCount(), total = n + 8, px = Math.floor(440 / total), W = 600, H = section ? 750 : 690;
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  x.fillStyle = '#fff'; x.fillRect(0, 0, W, H);
+  x.strokeStyle = '#b79cf5'; x.lineWidth = 8; x.strokeRect(4, 4, W - 8, H - 8);
+  const off = Math.floor((W - px * total) / 2), top = 40;
+  x.fillStyle = '#000';
+  for (let r = 0; r < n; r++) for (let k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect(off + (k + 4) * px, top + (r + 4) * px, px, px);
+  x.textAlign = 'center'; x.fillStyle = '#3d3556';
+  let size = 44; x.font = 'bold ' + size + 'px Arial, sans-serif';
+  while (x.measureText(name).width > W - 60 && size > 18) { size -= 2; x.font = 'bold ' + size + 'px Arial, sans-serif'; }
+  let y = top + px * total + 60;
+  x.fillText(name, W / 2, y);
+  x.font = '34px Arial, sans-serif'; y += 55; x.fillText('Grade ' + grade + '  ·  ' + strand, W / 2, y);
+  if (section) { x.font = '30px Arial, sans-serif'; y += 48; x.fillText(section, W / 2, y); }
+  return c;
+}
+const toBlob = c => new Promise(r => c.toBlob(r, 'image/png'));
+
+async function save(filename, data){
+  try {
+    const blob = data instanceof Blob ? data : new Blob([data]);
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  } catch (e) { msg('Could not save the file.'); }
+}
+
+$('#go').onclick = async () => {
+  await window.libsReady;
+  if (!window.qrcode) { msg('QR library did not load. Check your internet connection and reload the page.'); return; }
+  $('#out').innerHTML = ''; made = [];
+  $('#list').value.split('\n').forEach(line => {
+    const p = line.split(/\t|,/).map(t => t.trim());
+    if (p.length < 3 || !p[0]) return;
+    const c = draw(p[0], p[1], p[2], p[3] || '');
+    let name = 'QR_' + p.slice(0, 3).join('_').replace(/[^\w]+/g, '_'), k = 1, base = name;
+    while (made.some(m => m.name === name + '.png')) name = base + '_' + (++k);
+    name += '.png';
+    made.push({ name, canvas: c });
+    const card = document.createElement('div'); card.className = 'card'; card.append(c);
+    const b = document.createElement('button'); b.className = 'alt'; b.textContent = 'Download PNG';
+    b.onclick = async () => save(name, await toBlob(c));
+    card.append(b); $('#out').append(card);
+  });
+  msg(made.length ? made.length + ' QR code(s) made.' : 'No valid lines. Use: Name, Grade, Strand');
+};
+$('#print').onclick = () => { try { print(); } catch (e) { msg('Printing is not available here. Use Download all and print the pictures.'); } };
+$('#all').onclick = async () => {
+  if (!made.length) { msg('Make the QR codes first.'); return; }
+  if (!(await loadZip())) { msg('ZIP library did not load. Use Download PNG on each card.'); return; }
+  const z = new JSZip();
+  for (const m of made) z.file(m.name, await toBlob(m.canvas));
+  await save('QR_codes.zip', await z.generateAsync({ type: 'blob' }));
+};
+
+/* cute click burst */
+addEventListener('pointerdown', e => {
+  const b = e.target.closest && e.target.closest('button'); if (!b) return;
+  const ch = ['♥','★','✦','✿','●'], col = ['#ff9ec7','#a78bfa','#6fd3ae','#ffc65c','#7fb8ff'];
+  for (let i = 0; i < 7; i++) {
+    const s = document.createElement('span'), a = Math.PI * 2 * i / 7 + Math.random() * .6, d = 36 + Math.random() * 28;
+    s.className = 'pop'; s.textContent = ch[i % 5];
+    s.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;color:${col[i % 5]};--dx:${Math.cos(a) * d}px;--dy:${Math.sin(a) * d}px`;
+    document.body.appendChild(s); setTimeout(() => s.remove(), 800);
+  }
+});
+</script>
+</body>
+</html>
